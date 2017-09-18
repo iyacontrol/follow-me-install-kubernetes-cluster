@@ -20,6 +20,9 @@ export ETCD_ENDPOINTS="https://10.64.3.7:2379,https://10.64.3.8:2379,https://10.
 # flanneld 网络配置前缀
 export FLANNEL_ETCD_PREFIX="/kubernetes/network"
 
+# calico 网络配置前缀
+export CALICO_ETCD_PREFIX="/kubernetes/network"
+
 # kubernetes 服务 IP (一般是 SERVICE_CIDR 中第一个IP)
 export CLUSTER_KUBERNETES_SVC_IP="10.254.0.1"
 
