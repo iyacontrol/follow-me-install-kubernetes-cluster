@@ -145,3 +145,14 @@ NAME                                     READY     STATUS    RESTARTS   AGE
 calico-policy-controller                 3/3       Running   0          1m
 $
 ```
+
+### 注意事项
+
+对于kubelet启动参数需要添加：
+
+ --network-plugin-dir=/etc/cni/net.d \
+ --network-plugin=cni \
+ --cni-bin-dir=/opt/cni/bin \
+ --cgroup-driver=systemd \
+
+ 其中设置cgroup-driver参数，为了让kubelet和docker的这两个参数一致，否则启动不起来
