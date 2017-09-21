@@ -39,7 +39,7 @@ $
 1. 从 [github release 页面](https://github.com/kubernetes/kubernetes/releases) 下载发布版 tarball，解压后再执行下载脚本
 
     ``` shell
-    $ wget https://github.com/kubernetes/kubernetes/releases/download/v1.6.2/kubernetes.tar.gz
+    $ wget https://github.com/kubernetes/kubernetes/releases/download/v1.7.6/kubernetes.tar.gz
     $ tar -xzvf kubernetes.tar.gz
     ...
     $ cd kubernetes
@@ -52,8 +52,8 @@ $
     `server` 的 tarball `kubernetes-server-linux-amd64.tar.gz` 已经包含了 `client`(`kubectl`) 二进制文件，所以不用单独下载`kubernetes-client-linux-amd64.tar.gz`文件；
 
     ``` shell
-    $ # wget https://dl.k8s.io/v1.6.2/kubernetes-client-linux-amd64.tar.gz
-    $ wget https://dl.k8s.io/v1.6.2/kubernetes-server-linux-amd64.tar.gz
+    $ # wget https://dl.k8s.io/v1.7.6/kubernetes-client-linux-amd64.tar.gz
+    $ wget https://dl.k8s.io/v1.7.6/kubernetes-server-linux-amd64.tar.gz
     $ tar -xzvf kubernetes-server-linux-amd64.tar.gz
     ...
     $ cd kubernetes
@@ -67,9 +67,9 @@ $ sudo cp -r server/bin/{kube-apiserver,kube-controller-manager,kube-scheduler,k
 $
 ```
 
-## 安装和配置 flanneld
+## 安装和配置 Calico
 
-参考 [05-部署Flannel网络.md](./05-部署Flannel网络.md)
+参考 [05-部署Calico网络.md](./05-部署Calico网络.md)
 
 ## 创建 kubernetes 证书
 

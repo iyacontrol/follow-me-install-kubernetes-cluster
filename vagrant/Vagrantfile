@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
     case $os_image
     when :centos7
-      config.vm.box = "bento/centos-7.3"
+      config.vm.box = "bento/centos-7.2"
     when :ubuntu16
       config.vm.box = "bento/ubuntu-16.04"
     end

@@ -26,9 +26,9 @@ $ source /root/local/bin/environment.sh
 $
 ```
 
-## 安装和配置 flanneld
+## 安装和配置 Calico
 
-参考 [05-部署Flannel网络.md](./05-部署Flannel网络.md)
+参考 [05-部署Calico网络.md](./05-部署Calico网络.md)
 
 ## 安装和配置 docker
 
@@ -134,7 +134,7 @@ $
 ### 下载最新的 kubelet 和 kube-proxy 二进制文件
 
 ``` bash
-$ wget https://dl.k8s.io/v1.6.2/kubernetes-server-linux-amd64.tar.gz
+$ wget https://dl.k8s.io/v1.7.6/kubernetes-server-linux-amd64.tar.gz
 $ tar -xzvf kubernetes-server-linux-amd64.tar.gz
 $ cd kubernetes
 $ tar -xzvf  kubernetes-src.tar.gz
@@ -195,6 +195,10 @@ ExecStart=/root/local/bin/kubelet \\
   --allow-privileged=true \\
   --serialize-image-pulls=false \\
   --logtostderr=true \\
+  --network-plugin-dir=/etc/cni/net.d \
+  --network-plugin=cni \
+  --cni-bin-dir=/opt/cni/bin \
+  --cgroup-driver=systemd \
   --v=2
 ExecStartPost=/sbin/iptables -A INPUT -s 10.0.0.0/8 -p tcp --dport 4194 -j ACCEPT
 ExecStartPost=/sbin/iptables -A INPUT -s 172.16.0.0/12 -p tcp --dport 4194 -j ACCEPT
@@ -250,7 +254,7 @@ $ kubectl certificate approve csr-2b308
 certificatesigningrequest "csr-2b308" approved
 $ kubectl get nodes
 NAME        STATUS    AGE       VERSION
-10.64.3.7   Ready     49m       v1.6.2
+10.64.3.7   Ready     49m       v1.7.6
 ```
 
 自动生成了 kubelet kubeconfig 文件和公私钥：
@@ -440,8 +444,8 @@ daemonset "nginx-ds" created
 ``` bash
 $ kubectl get nodes
 NAME        STATUS    AGE       VERSION
-10.64.3.7   Ready     8d        v1.6.2
-10.64.3.8   Ready     8d        v1.6.2
+10.64.3.7   Ready     8d        v1.7.6
+10.64.3.8   Ready     8d        v1.7.6
 ```
 
 都为 Ready 时正常。
