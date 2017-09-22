@@ -152,6 +152,17 @@ cat >/etc/cni/net.d/10-calico.conf <<EOF
 EOF  
 ```
 
+安装标准的CNI loopback 插件
+
+Kubernetes 要求 标准的 CNI loopback 插件。
+
+``` bash 
+wget https://github.com/containernetworking/cni/releases/download/v0.3.0/cni-v0.3.0.tgz
+tar -zxvf cni-v0.3.0.tgz
+sudo cp loopback /opt/cni/bin/
+```
+
+
 ### 部署calico网络策略控制器
 
 calico/kube-policy-controller实现了k8s networkpolicy api，通过k8s api监听pod，namespace,networkpolicy事件从而做出对应的时间相应，通过rs运行为一个单独的pod
