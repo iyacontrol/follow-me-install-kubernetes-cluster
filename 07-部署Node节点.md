@@ -1,3 +1,4 @@
+
 <!-- toc -->
 
 tags: node, flanneld, docker, kubeconfig, kubelet, kube-proxy
@@ -6,7 +7,7 @@ tags: node, flanneld, docker, kubeconfig, kubelet, kube-proxy
 
 kubernetes Node 节点包含如下组件：
 
-+ flanneld
++ calico
 + docker
 + kubelet
 + kube-proxy
@@ -22,68 +23,23 @@ $ export KUBE_APISERVER="https://${MASTER_IP}:6443"
 $ # 当前部署的节点 IP
 $ export NODE_IP=10.64.3.7
 $ # 导入用到的其它全局变量：ETCD_ENDPOINTS、FLANNEL_ETCD_PREFIX、CLUSTER_CIDR、CLUSTER_DNS_SVC_IP、CLUSTER_DNS_DOMAIN、SERVICE_CIDR
-$ source /root/local/bin/environment.sh
+$ source /usr/local/bin/environment.sh
 $
 ```
 
 ## 安装和配置 Calico
 
-参考 [05-部署Calico网络.md](./05-部署Calico网络.md)
+参考 [05-部署Calico网络.md](http://wiki.dataengine.com/pages/viewpage.action?pageId=13957743)
 
-## 安装和配置 docker
-
-### 下载最新的 docker 二进制文件
-
+## 安装和配置 docker 
+### 安装docker 
+这里使用yum安装即可
+ 
 ``` bash
-$ wget https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz
-$ tar -xvf docker-17.04.0-ce.tgz
-$ cp docker/docker* /root/local/bin
-$ cp docker/completion/bash/docker /etc/bash_completion.d/
-$
+$ sudo install docker
 ```
 
-### 创建 docker 的 systemd unit 文件
-
-``` bash
-$ cat docker.service
-[Unit]
-Description=Docker Application Container Engine
-Documentation=http://docs.docker.io
-
-[Service]
-Environment="PATH=/root/local/bin:/bin:/sbin:/usr/bin:/usr/sbin"
-EnvironmentFile=-/run/flannel/docker
-ExecStart=/root/local/bin/dockerd --log-level=error $DOCKER_NETWORK_OPTIONS
-ExecReload=/bin/kill -s HUP $MAINPID
-Restart=on-failure
-RestartSec=5
-LimitNOFILE=infinity
-LimitNPROC=infinity
-LimitCORE=infinity
-Delegate=yes
-KillMode=process
-
-[Install]
-WantedBy=multi-user.target
-```
-
-+ dockerd 运行时会调用其它 docker 命令，如 docker-proxy，所以需要将 docker 命令所在的目录加到 PATH 环境变量中；
-+ flanneld 启动时将网络配置写入到 `/run/flannel/docker` 文件中的变量 `DOCKER_NETWORK_OPTIONS`，dockerd 命令行上指定该变量值来设置 docker0 网桥参数；
-+ 如果指定了多个 `EnvironmentFile` 选项，则必须将 `/run/flannel/docker` 放在最后(确保 docker0 使用 flanneld 生成的 bip 参数)；
-+ 不能关闭默认开启的 `--iptables` 和 `--ip-masq` 选项；
-+ 如果内核版本比较新，建议使用 `overlay` 存储驱动；
-+ docker 从 1.13 版本开始，可能将 **iptables FORWARD chain的默认策略设置为DROP**，从而导致 ping 其它 Node 上的 Pod IP 失败，遇到这种情况时，需要手动设置策略为 `ACCEPT`：
-
-  ``` bash
-  $ sudo iptables -P FORWARD ACCEPT
-  $
-  ```
-  并且把以下命令写入/etc/rc.local文件中，防止节点重启**iptables FORWARD chain的默认策略又还原为DROP**
-  
-  ``` bash
-  sleep 60 && /sbin/iptables -P FORWARD ACCEPT
-  ```
-
+### 注意事项
 
 + 为了加快 pull image 的速度，可以使用国内的仓库镜像服务器，同时增加下载的并发数。(如果 dockerd 已经运行，则需要重启 dockerd 生效。)
 
@@ -94,21 +50,6 @@ WantedBy=multi-user.target
       "max-concurrent-downloads": 10
     }
     ```
-
-完整 unit 见 [docker.service](https://github.com/iyacontrol/follow-me-install-kubernetes-cluster/blob/master/systemd/docker.service)
-
-### 启动 dockerd
-
-``` bash
-$ sudo cp docker.service /etc/systemd/system/docker.service
-$ sudo systemctl daemon-reload
-$ sudo systemctl stop firewalld
-$ sudo systemctl disable firewalld
-$ sudo iptables -F && sudo iptables -X && sudo iptables -F -t nat && sudo iptables -X -t nat
-$ sudo systemctl enable docker
-$ sudo systemctl start docker
-$
-```
 
 + 需要关闭 firewalld(centos7)/ufw(ubuntu16.04)，否则可能会重复创建的 iptables 规则；
 + 最好清理旧的 iptables rules 和 chains 规则；
@@ -138,7 +79,7 @@ $ wget https://dl.k8s.io/v1.7.6/kubernetes-server-linux-amd64.tar.gz
 $ tar -xzvf kubernetes-server-linux-amd64.tar.gz
 $ cd kubernetes
 $ tar -xzvf  kubernetes-src.tar.gz
-$ sudo cp -r ./server/bin/{kube-proxy,kubelet} /root/local/bin/
+$ sudo cp -r ./server/bin/{kube-proxy,kubelet} /usr/local/bin/
 $
 ```
 
@@ -181,7 +122,7 @@ Requires=docker.service
 
 [Service]
 WorkingDirectory=/var/lib/kubelet
-ExecStart=/root/local/bin/kubelet \\
+ExecStart=/usr/local/bin/kubelet \\
   --address=${NODE_IP} \\
   --hostname-override=${NODE_IP} \\
   --pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest \\
@@ -354,7 +295,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/var/lib/kube-proxy
-ExecStart=/root/local/bin/kube-proxy \\
+ExecStart=/usr/local/bin/kube-proxy \\
   --bind-address=${NODE_IP} \\
   --hostname-override=${NODE_IP} \\
   --cluster-cidr=${SERVICE_CIDR} \\
@@ -494,3 +435,10 @@ $
 ```
 
 预期输出 nginx 欢迎页面内容。
+
+
+
+
+
+
+
