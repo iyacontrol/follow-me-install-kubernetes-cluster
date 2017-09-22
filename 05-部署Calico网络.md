@@ -87,8 +87,33 @@ EOF
 $ sudo cp calico-node.service /etc/systemd/system/
 $ sudo systemctl enable /etc/systemd/system/calico-node.service
 $ sudo systemctl start calico-node.service
-$ systemctl status calico-node.service # 查看
+$ systemctl status calico-node.service # 查看运行状态
 ```
+
+其实这个systemd unit有点复杂，我们已经把calicoctl放置到/usr/local/bin下面了，calicoctl本身封装了docker的操作。所以可以提供如下：
+
+``` bash
+$ cat > calico-node.service << EOF
+[Unit]
+Description=calicoctl node
+After=docker.service
+Requires=docker.service
+
+[Service]
+User=root
+PermissionsStartOnly=true
+Environment="ETCD_ENDPOINTS=https://10.64.3.7:2379,https://10.64.3.8:2379,https://10.64.3.86:2379 ETCD_CA_CERT_FILE=/etc/kubernetes/ssl/ca.pem ETCD_CERT_FILE=/etc/etcd/ssl/etcd.pem ETCD_KEY_FILE=/etc/etcd/ssl/etcd-key.pem"
+ExecStart=/usr/local/bin/calicoctl node run --node-image=quay.io/calico/node:v2.5.1
+  
+ExecStop=/usr/bin/docker rm -f calico-node
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
 
 ### 下载并设置 Calico CNI plugins
 
@@ -121,7 +146,7 @@ cat >/etc/cni/net.d/10-calico.conf <<EOF
         "type": "k8s"
     },
     "kubernetes": {
-        "kubeconfig": "/etc/kubernetes/kubelet.kubeconfig"
+        "kubeconfig": "/etc/kubernetes/kube-proxy.kubeconfig"
     }
 }
 EOF  
