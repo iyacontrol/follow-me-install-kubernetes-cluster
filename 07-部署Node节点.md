@@ -95,7 +95,7 @@ WantedBy=multi-user.target
     }
     ```
 
-完整 unit 见 [docker.service](https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/systemd/docker.service)
+完整 unit 见 [docker.service](https://github.com/iyacontrol/follow-me-install-kubernetes-cluster/blob/master/systemd/docker.service)
 
 ### 启动 dockerd
 
@@ -220,7 +220,7 @@ EOF
 + `--cluster-dns` 指定 kubedns 的 Service IP(可以先分配，后续创建 kubedns 服务时指定该 IP)，`--cluster-domain` 指定域名后缀，这两个参数同时指定后才会生效；
 + kubelet cAdvisor 默认在**所有接口**监听 4194 端口的请求，对于有外网的机器来说不安全，`ExecStartPost` 选项指定的 iptables 规则只允许内网机器访问 4194 端口；
 
-完整 unit 见 [kubelet.service](https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/systemd/kubelet.service)
+完整 unit 见 [kubelet.service](https://github.com/iyacontrol/follow-me-install-kubernetes-cluster/blob/master/systemd/kubelet.service)
 
 ### 启动 kubelet
 
@@ -376,7 +376,7 @@ EOF
 + `--kubeconfig` 指定的配置文件嵌入了 kube-apiserver 的地址、用户名、证书、秘钥等请求和认证信息；
 + 预定义的 RoleBinding `cluster-admin` 将User `system:kube-proxy` 与 Role `system:node-proxier` 绑定，该 Role 授予了调用 `kube-apiserver` Proxy 相关 API 的权限；
 
-完整 unit 见 [kube-proxy.service](https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/systemd/kube-proxy.service)
+完整 unit 见 [kube-proxy.service](https://github.com/iyacontrol/follow-me-install-kubernetes-cluster/blob/master/systemd/kube-proxy.service)
 
 ### 启动 kube-proxy
 

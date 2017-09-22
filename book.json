@@ -34,10 +34,10 @@
       "shortName": "knowl"
     },
     "github": {
-      "url": "https://github.com/opsnull/follow-me-install-kubernetes-cluster"
+      "url": "https://github.com/iyacontrol/follow-me-install-kubernetes-cluster"
     },
     "editlink": {
-      "base": "https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/",
+      "base": "https://github.com/iyacontrol/follow-me-install-kubernetes-cluster/blob/master/",
       "label": "编辑本页"
     },
     "baidu": {
@@ -47,7 +47,7 @@
         "token": "UA-79732341-1"
     },
     "sitemap": {
-        "hostname": "http://k8s.opsnull.com"
+        "hostname": "http://k8s.iyacontrol.com"
     },
     "page-footer-ex":{
         "copyright":"zhangjun",

@@ -127,7 +127,7 @@ EOF
 + 为了保证通信安全，需要指定 etcd 的公私钥(cert-file和key-file)、Peers 通信的公私钥和 CA 证书(peer-cert-file、peer-key-file、peer-trusted-ca-file)、客户端的CA证书（trusted-ca-file）；
 + `--initial-cluster-state` 值为 `new` 时，`--name` 的参数值必须位于 `--initial-cluster` 列表中；
 
-完整 unit 文件见：[etcd.service](https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/systemd/etcd.service)
+完整 unit 文件见：[etcd.service](https://github.com/iyacontrol/follow-me-install-kubernetes-cluster/blob/master/systemd/etcd.service)
 
 ## 启动 etcd 服务
 

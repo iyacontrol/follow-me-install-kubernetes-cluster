@@ -146,7 +146,7 @@ cat >/etc/cni/net.d/10-calico.conf <<EOF
         "type": "k8s"
     },
     "kubernetes": {
-        "kubeconfig": "/etc/kubernetes/kube-proxy.kubeconfig"
+        "kubeconfig": "/etc/kubernetes/kubelet.kubeconfig"
     }
 }
 EOF  
