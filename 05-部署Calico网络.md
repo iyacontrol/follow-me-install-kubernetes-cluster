@@ -51,9 +51,9 @@ User=root
 PermissionsStartOnly=true
 ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
   -e ETCD_ENDPOINTS=${ETCD_ENDPOINTS} \
-  -e ETCD_CA_CERT_FILE=/etc/kubernetes/ssl/ca.pem \
-  -e ETCD_CERT_FILE=/etc/etcd/ssl/etcd.pem \
-  -e ETCD_KEY_FILE=/etc/etcd/ssl/etcd-key.pem \
+  -e ETCD_CA_CERT_FILE=/etc/calico/certs/ca_cert.crt \
+  -e ETCD_CERT_FILE=/etc/calico/certs/cert.crt \
+  -e ETCD_KEY_FILE=/etc/calico/certs/key.pem \
   -e NODENAME=${NODE_NAME} \
   -e IP= \
   -e NO_DEFAULT_POOLS= \
@@ -68,6 +68,8 @@ ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
   -v /run/docker/plugins:/run/docker/plugins \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /etc/kubernetes/ssl/ca.pem:/etc/calico/certs/ca_cert.crt \
+  -v /etc/etcd/ssl/etcd-key.pem:/etc/calico/certs/key.pem \
+  -v /etc/etcd/ssl/etcd.pem:/etc/calico/certs/cert.crt \
   quay.io/calico/node:v2.5.1
   
 ExecStop=/usr/bin/docker rm -f calico-node
