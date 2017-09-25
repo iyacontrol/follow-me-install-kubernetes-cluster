@@ -50,16 +50,17 @@ Requires=docker.service
 User=root
 PermissionsStartOnly=true
 ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
-  -e ETCD_ENDPOINTS=${ETCD_ENDPOINTS} \
+  -e ETCD_ENDPOINTS=https://10.64.3.7:2379,https://10.64.3.8:2379,https://10.64.3.86:2379 \
   -e ETCD_CA_CERT_FILE=/etc/calico/certs/ca_cert.crt \
   -e ETCD_CERT_FILE=/etc/calico/certs/cert.crt \
   -e ETCD_KEY_FILE=/etc/calico/certs/key.pem \
-  -e NODENAME=${NODE_NAME} \
+  -e NODENAME=kube-node1 \
   -e IP= \
-  -e NO_DEFAULT_POOLS= \
-  -e AS= \
+  -e CALICO_IPV4POOL_CIDR=172.30.0.0/16 \
+  -e CALICO_IPV4POOL_IPIP=always \
   -e CALICO_LIBNETWORK_ENABLED=true \
-  -e IP6= \
+  -e FELIX_IPV6SUPPORT=false \
+  -e FELIX_IPINIPMTU=1440
   -e CALICO_NETWORKING_BACKEND=bird \
   -v /var/log/calico:/var/log/calico \
   -v /var/run/calico:/var/run/calico \
@@ -194,3 +195,9 @@ $
  --cgroup-driver=systemd \
 
  其中设置cgroup-driver参数，为了让kubelet和docker的这两个参数一致，否则启动不起来
+ apiVersion: v1
+ kind: ipPool
+ metadata:
+    cidr: 172.30.0.0/16
+ spec:
+    nat-outgoing: true
