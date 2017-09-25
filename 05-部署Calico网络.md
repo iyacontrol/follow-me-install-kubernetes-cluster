@@ -138,7 +138,8 @@ cat >/etc/cni/net.d/10-calico.conf <<EOF
     "etcd_endpoints": ${ETCD_ENDPOINTS}",
     "etcd_key_file": "/etc/etcd/ssl/etcd-key.pem",
     "etcd_cert_file": "/etc/etcd/ssl/etcd.pem",
-    "etcd_ca_cert_file": "/etc/kubernetes/ssl/ca.pem",
+    "etcd_ca_cert_file": "/etc/kubernetes/ssl/ca.pem", 
+    "mtu": 1440,   
     "log_level": "info",
     "ipam": {
         "type": "calico-ipam",
