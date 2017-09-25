@@ -141,7 +141,8 @@ cat >/etc/cni/net.d/10-calico.conf <<EOF
     "etcd_ca_cert_file": "/etc/kubernetes/ssl/ca.pem",
     "log_level": "info",
     "ipam": {
-        "type": "calico-ipam"
+        "type": "calico-ipam",
+        "ipv4_pools": ["172.30.0.0/16"]
     },
     "policy": {
         "type": "k8s"
