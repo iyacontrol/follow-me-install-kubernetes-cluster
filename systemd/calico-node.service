@@ -5,11 +5,29 @@ Requires=docker.service
 
 [Service]
 User=root
-Environment=ETCD_ENDPOINTS=${ETCD_ENDPOINTS}
 PermissionsStartOnly=true
-ExecStartPre=/usr/bin/wget -N -P /opt/bin https://github.com/projectcalico/calico-containers/releases/download/v1.5.0/calicoctl
-ExecStartPre=/usr/bin/chmod +x /opt/bin/calicoctl
-ExecStart=/opt/bin/calicoctl node --detach=false
+ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
+  -e ETCD_ENDPOINTS=https://10.64.3.7:2379,https://10.64.3.8:2379,https://10.64.3.86:2379 \
+  -e ETCD_CA_CERT_FILE=/etc/calico/certs/ca_cert.crt \
+  -e ETCD_CERT_FILE=/etc/calico/certs/cert.crt \
+  -e ETCD_KEY_FILE=/etc/calico/certs/key.pem \
+  -e NODENAME=kube-node1 \
+  -e IP= \
+  -e CALICO_IPV4POOL_CIDR=172.30.0.0/16 \
+  -e CALICO_IPV4POOL_IPIP=always \
+  -e CALICO_NETWORKING_BACKEND=bird \
+  -v /var/log/calico:/var/log/calico \
+  -v /var/run/calico:/var/run/calico \
+  -v /lib/modules:/lib/modules \
+  -v /run:/run \
+  -v /run/docker/plugins:/run/docker/plugins \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /etc/kubernetes/ssl/ca.pem:/etc/calico/certs/ca_cert.crt \
+  -v /etc/etcd/ssl/etcd-key.pem:/etc/calico/certs/key.pem \
+  -v /etc/etcd/ssl/etcd.pem:/etc/calico/certs/cert.crt \
+  quay.io/calico/node:v2.5.1
+  
+ExecStop=/usr/bin/docker rm -f calico-node
 Restart=always
 RestartSec=10
 
