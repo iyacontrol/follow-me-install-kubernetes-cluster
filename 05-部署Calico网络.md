@@ -59,8 +59,6 @@ ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
   -e CALICO_IPV4POOL_CIDR=172.30.0.0/16 \
   -e CALICO_IPV4POOL_IPIP=always \
   -e CALICO_LIBNETWORK_ENABLED=true \
-  -e FELIX_IPV6SUPPORT=false \
-  -e FELIX_IPINIPMTU=1440
   -e CALICO_NETWORKING_BACKEND=bird \
   -v /var/log/calico:/var/log/calico \
   -v /var/run/calico:/var/run/calico \
