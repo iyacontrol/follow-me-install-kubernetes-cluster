@@ -54,7 +54,6 @@ ExecStart=/usr/bin/docker run --net=host --privileged --name=calico-node \
   -e ETCD_CA_CERT_FILE=/etc/calico/certs/ca_cert.crt \
   -e ETCD_CERT_FILE=/etc/calico/certs/cert.crt \
   -e ETCD_KEY_FILE=/etc/calico/certs/key.pem \
-  -e NODENAME=kube-node1 \
   -e IP= \
   -e CALICO_IPV4POOL_CIDR=172.30.0.0/16 \
   -e CALICO_IPV4POOL_IPIP=always \
@@ -144,7 +143,8 @@ cat >/etc/cni/net.d/10-calico.conf <<EOF
         "ipv4_pools": ["172.30.0.0/16"]
     },
     "policy": {
-        "type": "k8s"
+        "type": "k8s"，
+        "k8s_api_root": "https://10.64.3.7:6443" 
     },
     "kubernetes": {
         "kubeconfig": "/etc/kubernetes/kubelet.kubeconfig"

@@ -138,7 +138,6 @@ ExecStart=/usr/local/bin/kubelet \\
   --logtostderr=true \\
   --network-plugin-dir=/etc/cni/net.d \
   --network-plugin=cni \
-  --cni-bin-dir=/opt/cni/bin \
   --cgroup-driver=systemd \
   --v=2
 ExecStartPost=/sbin/iptables -A INPUT -s 10.0.0.0/8 -p tcp --dport 4194 -j ACCEPT
